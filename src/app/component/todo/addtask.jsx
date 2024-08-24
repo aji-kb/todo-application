@@ -19,7 +19,7 @@ const AddTask = (props) => {
                     <span className='input-group-text'><strong>Description</strong> </span>
                 </div>
                 <input id='taskText' className='form-control' type='text' value={todoText} onChange={(e)=>{todoTextChange(e)}}></input>
-                <input id='btnAdd' type='button' onClick={btnAddClick} className='px-3 btn btn-success' value='Add'></input>
+                <input id='btnAdd' type='button' onClick={btnAddClick} className='px-3 btn btn-secondary' value='Add'></input>
             </div>
         </>
     )

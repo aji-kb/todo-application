@@ -38,6 +38,10 @@ const ToDo = ()=>{
 
     }
 
+    const btnClearTasksClick = ()=>{
+        setCompletedTodoList([]);
+    }
+
     return (
         <>
             <div className="container">
@@ -49,6 +53,7 @@ const ToDo = ()=>{
                 </div>
                 <div className="row mt-5">
                     <div className="col">
+                        {todoList.length == 0? <div className="text-start"><em>No Tasks! Start Adding Tasks</em></div>: ''}
                         <table className="table table-bordered">
                             {
                             todoList.length > 0? 
@@ -58,7 +63,7 @@ const ToDo = ()=>{
                                     <td className="text-start"><span className="px-3"><strong>Task</strong></span></td>
                                 </tr>
                             </thead>
-                            : <div className="text-start"><em>No Tasks! Start Adding Tasks</em></div>
+                            : ''
                             }
                             <tbody>
                                 {
@@ -98,6 +103,15 @@ const ToDo = ()=>{
                         </div>
                     </div>
                 </div>
+                {
+                    completedTodoList.length > 0?
+                    <div className="row">
+                        <div className="col text-start">
+                            <button onClick={btnClearTasksClick} className='btn btn-light'>Clear Completed Tasks</button>
+                        </div>
+                    </div>
+                    : ''
+                }
             </div>
         </>
     )
