@@ -1,37 +1,47 @@
 import AddTask from "./addtask";
 import {useState} from 'react';
-
+import { Modal } from "@material-ui/core";
 
 const ToDo = ()=>{
 
     const [addedText, setAddedText] = useState('');
     const [todoList, setTodoList] = useState([]);
     const [completedTodoList, setCompletedTodoList] = useState([]);
+    const [confirmDialog, setConfirmDialog] = useState(false);
 
     const handleAddClick = (data)=>{
         setAddedText(data);
-        const existingTodo = todoList.slice(); //creates a shallow copy of an array into a new object
-        if(existingTodo.indexOf(data) < 0)
+
+        const existingItem= todoList.findIndex((item)=>data.toLowerCase() === item.toLowerCase());
+        if(existingItem < 0)
+        {
+            const existingTodo = todoList.slice(); //creates a shallow copy of an array into a new object
             existingTodo.push(data);
-        setTodoList(existingTodo);
+            setTodoList(existingTodo);
+        }
+
+        const completedItem = completedTodoList.findIndex((item)=>data.toLowerCase() === item.toLowerCase());
+        if(completedItem >= 0)
+        {
+            const existingCompletedToDo = completedTodoList.slice();
+            existingCompletedToDo.splice(completedItem, 1);
+            setCompletedTodoList(existingCompletedToDo);
+        }
+
     }
 
-    const completeTask = (item)=>{
+    const completeTask = (data)=>{
         const existingTodo = todoList.slice();
         const existingCompletedToDo = completedTodoList.slice();
 
-        let index = existingTodo.indexOf(item);
+        let index = existingTodo.findIndex((item)=> data.toLowerCase() === item.toLowerCase());
         if(index >= 0)
         {
             existingTodo.splice(index,1);
         }
 
-        console.log(existingTodo);
-
-        if(existingCompletedToDo.indexOf(item) <0)
-            existingCompletedToDo.push(item);
-
-        console.log(existingCompletedToDo);
+        if(existingCompletedToDo.findIndex((item)=> data.toLowerCase() === item.toLowerCase()) <0)
+            existingCompletedToDo.push(data);
 
         setTodoList(existingTodo);
         setCompletedTodoList(existingCompletedToDo);
@@ -39,7 +49,18 @@ const ToDo = ()=>{
     }
 
     const btnClearTasksClick = ()=>{
-        setCompletedTodoList([]);
+        setConfirmDialog(true);
+    }
+
+    const confirmClick = (response)=>{
+        if(response == 1)
+            setCompletedTodoList([]);
+
+        setConfirmDialog(false);
+    }
+
+    const handleConfirmDialogClose = function(){
+        setConfirmDialog(false);
     }
 
     return (
@@ -108,11 +129,33 @@ const ToDo = ()=>{
                     <div className="row">
                         <div className="col text-start">
                             <button onClick={btnClearTasksClick} className='btn btn-light'>Clear Completed Tasks</button>
+                            <Modal open={confirmDialog} onClose={handleConfirmDialogClose} 
+                            style={{
+                                position: 'fixed',
+                                height: 200,
+                                width: 340,
+                                left: 50,
+                                top: 100,
+                                margin: 'auto',
+                                border: '1px solid black',
+                                padding: '2%',
+                                background: 'lightgray',
+                                boxshadow: "2px solid black",
+                            }} >
+                            <>
+                                <div>Are you sure?</div>
+                                <div className="py-3">
+                                    <button className='btn btn-dark ' onClick={()=>confirmClick(1)}>Yes</button>
+                                    <button className='btn btn-ligh' onClick={()=>confirmClick(0)}>No</button>
+                                </div>
+                            </>
+                        </Modal>
                         </div>
                     </div>
                     : ''
                 }
             </div>
+
         </>
     )
 }
