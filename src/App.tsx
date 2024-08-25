@@ -2,12 +2,12 @@ import React from 'react';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
-import ToDo from './app/component/todo/todo';
+import Root from './app/component/root/root';
 
 function App() {
   return (
     <div className="App">
-        <ToDo></ToDo>
+        <Root></Root>
     </div>
   );
 }

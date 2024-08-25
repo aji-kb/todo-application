@@ -6,15 +6,42 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
+import ToDo from './app/component/todo/todo';
+import Contact from './app/component/contact/contact';
+import Home from './app/component/home/Home';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
+const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <App></App>,
+      children:[
+        {
+          path: '/',
+          element: <Home/>,
+          index: true
+        },
+        {
+          path: 'todo',
+          element: <ToDo/>
+        },
+        {
+          path: 'contact',
+          element: <Contact/>
+        }
+      ]
+    }
+])
+
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+            <RouterProvider router={router} />
   </React.StrictMode>
 );
 
