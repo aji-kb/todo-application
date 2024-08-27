@@ -21,3 +21,11 @@
     background-color: rgb(118, 178, 238); 
 
 }
+
+.loginbtn
+{
+    position: absolute;
+    right: 150px;
+    top: 10px;
+    text-align:end;
+}

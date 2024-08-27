@@ -1,7 +1,5 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
@@ -13,9 +11,13 @@ import {
 import ToDo from './app/component/todo/todo';
 import Contact from './app/component/contact/contact';
 import Home from './app/component/home/Home';
+import Login from './app/component/auth/login';
+import Profile from './app/component/auth/profile';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+
+console.log(process.env.REACT_APP_BASE_URL);
 
 const router = createBrowserRouter([
     {
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
         {
           path: 'contact',
           element: <Contact/>
+        },
+        {
+          path: 'login',
+          element: <Login/>
+        },
+        {
+          path: 'profile',
+          element: <Profile/>
         }
       ]
     }

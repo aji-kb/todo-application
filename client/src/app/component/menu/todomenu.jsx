@@ -1,9 +1,28 @@
 import {Link} from 'react-router-dom';
 import './todomenu.css';
+import {useState, useEffect} from 'react'
+import Profile from '../auth/profile';
+
+
 
 const ToDoMenu = ()=>{
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(()=>{
+        const idToken = localStorage.getItem("id_token");
+        if(idToken !== '')
+            setIsAuthenticated(true);
+    }, []);
+
+    const logoutHandler = ()=>{
+        console.log('logging the user out');
+        setIsAuthenticated(false);
+    }
+
     return (
         <>
+            
             <nav className="navbar navbar-expand-lg navbar-dark navbar-custom">
                 <a className="navbar-brand" href="#"></a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,8 +35,14 @@ const ToDoMenu = ()=>{
                         <li className="nav-item"><Link className="nav-link" to="/ToDo">Task Manager</Link></li>
                         <li className="nav-item"><Link className="nav-link" to="/Contact">Contact</Link></li>
                     </ul>
+                    <div className='navbar-nav loginbtn'>
+                        {
+                        (isAuthenticated?<Profile logout={logoutHandler}/>: <Link className='nav-link' to='/login'>Login</Link>)
+                        }
+                    </div>
                 </div>
             </nav>
+            
         </>
     )
 }

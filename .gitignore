@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+/client/node_modules
 /.pnp
 .pnp.js
 
@@ -10,6 +10,9 @@
 
 # production
 /build
+
+/server/**/bin
+/server/**/obj
 
 # misc
 .DS_Store
@@ -21,3 +24,25 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Created by https://www.toptal.com/developers/gitignore/api/react
+# Edit at https://www.toptal.com/developers/gitignore?templates=react
+
+### react ###
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
+
+
+node_modules
+bower_components
+
+*.sublime*
+
+psd
+thumb
+sketch
+
+# End of https://www.toptal.com/developers/gitignore/api/react
