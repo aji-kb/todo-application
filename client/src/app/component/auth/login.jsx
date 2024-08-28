@@ -1,6 +1,7 @@
 import {  GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
+import AuthContext from '../../AuthContext';
 
 const Login = ()=>{
 
@@ -8,11 +9,14 @@ const Login = ()=>{
     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
     const baseUrl = process.env.REACT_APP_BASE_URL;
 
+    const {isAuthenticated, setIsAuthenticated} = useContext(AuthContext);
+
     const HandleSuccess = function(e){
         localStorage.setItem("id_token", e.credential);
         fetch(baseUrl + "auth/google?idToken=" + e.credential).then((res)=>res.json()).then((data)=>{
           localStorage.setItem("userName", data.name);
           localStorage.setItem("userEmail", data.email);      
+          setIsAuthenticated(true);
         });
 
         navigate('/');
@@ -24,13 +28,15 @@ const Login = ()=>{
       }
 
     return (
-        <>
-        <div className="container mt-5">
-            <GoogleOAuthProvider clientId = {clientId}>
-              <GoogleLogin onSuccess={HandleSuccess} onError={HandleError}></GoogleLogin>
-            </GoogleOAuthProvider>
-        </div>
-        </>
+        <AuthContext.Consumer>
+          {()=>(
+            <div className="container mt-5">
+                <GoogleOAuthProvider clientId = {clientId}>
+                  <GoogleLogin onSuccess={HandleSuccess} onError={HandleError}></GoogleLogin>
+                </GoogleOAuthProvider>
+            </div>
+        )}
+        </AuthContext.Consumer>
     )
 }
 

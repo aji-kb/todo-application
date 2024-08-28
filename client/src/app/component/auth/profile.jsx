@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import './profile.css';
-
+import AuthContext from '../../AuthContext';
 
 
 const Profile = (props)=>{
 
+    const {isAuthenticated} = useContext(AuthContext);
+
     const [userName, setUserName] = useState('');
-    const [userEmail, setUserEmail] = useState('');
+    const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail"));
 
     useEffect(()=>{
-        setUserName(localStorage.getItem("userName"));
-        setUserEmail(localStorage.getItem("userEmail"));
+        if(isAuthenticated)
+            setUserName(localStorage.getItem("userName"));
     }, []);
 
     const logoutHandler = ()=>{
@@ -19,11 +21,13 @@ const Profile = (props)=>{
     }
 
     return (
-        <>
-            <div>
-                <span className="nav-text">{userName}!</span> <a type='button' onClick={logoutHandler} className='nav-link d-inline'>Logout</a>
-            </div>
-        </>
+        <AuthContext.Consumer>
+            {()=>(
+                <div>
+                    <span className="nav-text">{userName}!</span> <a type='button' onClick={logoutHandler} className='nav-link d-inline'>Logout</a>
+                </div>
+            )}
+        </AuthContext.Consumer>
     )
 }
 
