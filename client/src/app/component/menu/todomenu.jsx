@@ -34,7 +34,13 @@ const ToDoMenu = ()=>{
                 <div className="collapse navbar-collapse menu" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active"><Link className="nav-link" to="/">Home</Link></li>
-                        <li className="nav-item"><Link className="nav-link" to="/ToDo">Task Manager</Link></li>
+                        <li className="nav-item">
+                            <ul className='navbar-nav mr-auto'>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/ToDo">Task Manager</Link>
+                                </li>
+                            </ul>
+                        </li>
                         <li className="nav-item"><Link className="nav-link" to="/Contact">Contact</Link></li>
                     </ul>
                     <div className='navbar-nav loginbtn'>

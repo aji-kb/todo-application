@@ -13,6 +13,7 @@ import Contact from './app/component/contact/contact';
 import Home from './app/component/home/Home';
 import Login from './app/component/auth/login';
 import Profile from './app/component/auth/profile';
+import Category from './app/component/category/category';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
         {
           path: 'profile',
           element: <Profile/>
+        },
+        {
+          path: 'category',
+          element: <Category/>
         }
       ]
     }
