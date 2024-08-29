@@ -1,0 +1,8 @@
+namespace todoserver.Data.Model;
+
+public class Category: TrackedEntity
+{
+    public int Id {get;set;}
+    public string? CategoryName {get;set;}
+    
+}

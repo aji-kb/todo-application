@@ -4,15 +4,13 @@ import { Modal } from "@material-ui/core";
 
 const ToDo = ()=>{
 
-    const [addedText, setAddedText] = useState('');
     const [todoList, setTodoList] = useState([]);
     const [completedTodoList, setCompletedTodoList] = useState([]);
     const [confirmDialog, setConfirmDialog] = useState(false);
 
     const handleAddClick = (data)=>{
-        setAddedText(data);
 
-        const existingItem= todoList.findIndex((item)=>data.toLowerCase() === item.toLowerCase());
+        const existingItem= todoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
         if(existingItem < 0)
         {
             const existingTodo = todoList.slice(); //creates a shallow copy of an array into a new object
@@ -20,7 +18,7 @@ const ToDo = ()=>{
             setTodoList(existingTodo);
         }
 
-        const completedItem = completedTodoList.findIndex((item)=>data.toLowerCase() === item.toLowerCase());
+        const completedItem = completedTodoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
         if(completedItem >= 0)
         {
             const existingCompletedToDo = completedTodoList.slice();
@@ -34,13 +32,13 @@ const ToDo = ()=>{
         const existingTodo = todoList.slice();
         const existingCompletedToDo = completedTodoList.slice();
 
-        let index = existingTodo.findIndex((item)=> data.toLowerCase() === item.toLowerCase());
+        let index = existingTodo.findIndex((item)=> data.taskName.toLowerCase() === item.taskName.toLowerCase());
         if(index >= 0)
         {
             existingTodo.splice(index,1);
         }
 
-        if(existingCompletedToDo.findIndex((item)=> data.toLowerCase() === item.toLowerCase()) <0)
+        if(existingCompletedToDo.findIndex((item)=> data.taskName.toLowerCase() === item.taskName.toLowerCase()) <0)
             existingCompletedToDo.push(data);
 
         setTodoList(existingTodo);
@@ -67,7 +65,7 @@ const ToDo = ()=>{
         <>
             <div className="container">
                 <div className="row mt-5">
-                    <div className="col"><h3>To Do Application</h3></div>
+                    <div className="col"><h3>Task Assistant</h3></div>
                 </div>
                 <div className="row mt-5">
                     <div className="col"><AddTask onAdd={(data)=>{handleAddClick(data)}}></AddTask></div>
@@ -89,9 +87,9 @@ const ToDo = ()=>{
                             <tbody>
                                 {
                                     todoList.map((item)=>{
-                                    return <tr key={item}>
+                                    return <tr key={item.taskName}>
                                                 <td className="col-1"><input type="checkbox" onClick={()=>completeTask(item)}></input></td>
-                                                <td className="text-start"><span className="px-3">{item}</span></td>
+                                                <td className="text-start"><span className="px-3">{item.taskName}</span></td>
                                             </tr>
                                 })}
                             </tbody>
@@ -111,8 +109,8 @@ const ToDo = ()=>{
                                 </thead>
                                 <tbody>
                                         {completedTodoList.map((item) =>{
-                                            return <tr key={item}>
-                                                <td className="text-start"><span className="px-3">{item}</span></td>
+                                            return <tr key={item.taskName}>
+                                                <td className="text-start"><span className="px-3">{item.taskName}</span></td>
                                             </tr>
                                         })}
                                 </tbody>
