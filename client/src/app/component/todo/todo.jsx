@@ -1,6 +1,8 @@
 import AddTask from "./addtask";
-import {useState} from 'react';
 import { Modal } from "@material-ui/core";
+import {useState, useEffect} from 'react';
+import { fetchData, postData } from '../../../service/service';
+import { Tooltip } from 'react-tooltip'
 
 const ToDo = ()=>{
 
@@ -8,25 +10,25 @@ const ToDo = ()=>{
     const [completedTodoList, setCompletedTodoList] = useState([]);
     const [confirmDialog, setConfirmDialog] = useState(false);
 
-    const handleAddClick = (data)=>{
+    // const handleAddClick = (data)=>{
 
-        const existingItem= todoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
-        if(existingItem < 0)
-        {
-            const existingTodo = todoList.slice(); //creates a shallow copy of an array into a new object
-            existingTodo.push(data);
-            setTodoList(existingTodo);
-        }
+    //     const existingItem= todoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
+    //     if(existingItem < 0)
+    //     {
+    //         const existingTodo = todoList.slice(); //creates a shallow copy of an array into a new object
+    //         existingTodo.push(data);
+    //         setTodoList(existingTodo);
+    //     }
 
-        const completedItem = completedTodoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
-        if(completedItem >= 0)
-        {
-            const existingCompletedToDo = completedTodoList.slice();
-            existingCompletedToDo.splice(completedItem, 1);
-            setCompletedTodoList(existingCompletedToDo);
-        }
+    //     const completedItem = completedTodoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
+    //     if(completedItem >= 0)
+    //     {
+    //         const existingCompletedToDo = completedTodoList.slice();
+    //         existingCompletedToDo.splice(completedItem, 1);
+    //         setCompletedTodoList(existingCompletedToDo);
+    //     }
 
-    }
+    // }
 
     const completeTask = (data)=>{
         const existingTodo = todoList.slice();
@@ -61,6 +63,50 @@ const ToDo = ()=>{
         setConfirmDialog(false);
     }
 
+    const loadTasks = async ()=>{
+        const response = await fetchData("task");
+        if(response != null && response.message == undefined)
+        {
+            setTodoList(response);
+        }
+    }
+
+    useEffect(()=>{
+        loadTasks();
+    }, [])
+
+    const saveClick = async (e)=>{
+
+        //call API to save the task and reload the grid
+        let action = 'POST';
+        if(e.id > 0)
+        {
+           action = 'PUT';
+        }
+       
+        const response = await postData("task", e, action);
+       if(response != null && response.message == undefined)
+       {
+           //save successful. now reload the list
+           await loadTasks();
+       }
+       else
+       {
+            console.log(response.message);
+           //setErrorMessage(response.message);
+           //setSelectedCategory(e);
+
+       }
+   }
+
+   const onDeleteClick = (e)=>{
+
+   }
+
+   const onEditClick = (e)=>{
+
+   }
+
     return (
         <>
             <div className="container">
@@ -68,7 +114,7 @@ const ToDo = ()=>{
                     <div className="col"><h3>Task Assistant</h3></div>
                 </div>
                 <div className="row mt-5">
-                    <div className="col"><AddTask onAdd={(data)=>{handleAddClick(data)}}></AddTask></div>
+                    <div className="col"><AddTask onAdd={(data)=>{saveClick(data)}}></AddTask></div>
                 </div>
                 <div className="row mt-5">
                     <div className="col">
@@ -78,7 +124,7 @@ const ToDo = ()=>{
                             todoList.length > 0? 
                             <thead>
                                 <tr>
-                                    <td><strong>Action</strong></td>
+                                    <td><strong>Actions</strong></td>
                                     <td className="text-start"><span className="px-3"><strong>Task</strong></span></td>
                                 </tr>
                             </thead>
@@ -88,7 +134,14 @@ const ToDo = ()=>{
                                 {
                                     todoList.map((item)=>{
                                     return <tr key={item.taskName}>
-                                                <td className="col-1"><input type="checkbox" onClick={()=>completeTask(item)}></input></td>
+                                                <td className="col-2">
+                                                    <img src='/images/complete.png' data-tooltip-id='tt-complete' data-tooltip-content='Complete Task' className='grid-image action-link' type="checkbox" onClick={()=>completeTask(item)} alt='Complete'></img>
+                                                    <Tooltip id="tt-complete" />
+                                                    <img src='/images/delete.png' data-tooltip-id='tt-delete' data-tooltip-content='Delete Task' className='grid-image action-link mx-2' onClick={()=>onDeleteClick(item.id)} alt="Delete"></img>
+                                                    <Tooltip id="tt-delete" />
+                                                    <img src='/images/edit.png' data-tooltip-id='tt-edit' data-tooltip-content='Edit Task' className='grid-image action-link' onClick={()=>onEditClick(item.id)}></img>
+                                                    <Tooltip id="tt-edit" />
+                                                </td>
                                                 <td className="text-start"><span className="px-3">{item.taskName}</span></td>
                                             </tr>
                                 })}

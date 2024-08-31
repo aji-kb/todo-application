@@ -7,10 +7,11 @@ CREATE TABLE TaskManager.Task
     Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY, 
     TaskName NVARCHAR(1000) NOT NULL,
     DueDate DATETIME NULL, 
+    IsCompleted BIT NOT NULL DEFAULT 0,
     CreatedBy NVARCHAR(25) NOT NULL, 
     CreatedDate DATETIME  NOT NULL,
-    ModifiedBy NVARCHAR(25) NOT NULL,
-    ModifiedDate DATETIME NOT NULL
+    ModifiedBy NVARCHAR(25),
+    ModifiedDate DATETIME
 )
 
 GO
@@ -21,8 +22,8 @@ CREATE TABLE TaskManager.Category
     CategoryName NVARCHAR(50) NOT NULL, 
     CreatedBy NVARCHAR(25) NOT NULL, 
     CreatedDate DATETIME  NOT NULL,
-    ModifiedBy NVARCHAR(25) NOT NULL,
-    ModifiedDate DATETIME NOT NULL
+    ModifiedBy NVARCHAR(25),
+    ModifiedDate DATETIME
 )
 
 GO
@@ -32,6 +33,10 @@ CREATE TABLE TaskManager.TaskCategory
     Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     CategoryId INT NOT NULL,
     TaskId INT NOT NULL,
+    CreatedBy NVARCHAR(25) NOT NULL, 
+    CreatedDate DATETIME  NOT NULL,
+    ModifiedBy NVARCHAR(25),
+    ModifiedDate DATETIME
     CONSTRAINT FK_TASKCATEGORY_TASK FOREIGN KEY (TaskId)
     REFERENCES TASKMANAGER.TASK(Id),
     CONSTRAINT FK_TASKCATEGORY_CATEGORY FOREIGN KEY (CategoryId)

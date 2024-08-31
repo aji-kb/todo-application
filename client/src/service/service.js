@@ -1,24 +1,20 @@
 
 
-const fetchData  = (endpoint)=>{
-    const returnData = {};
-    fetch(process.env.REACT_APP_BASE_URL + endpoint).then((response)=>response.json()).then((data)=> returnData = data).catch((error)=>console.log(error));
-
-    return returnData;
+export const fetchData  = (endpoint)=>{
+    return fetch(process.env.REACT_APP_BASE_URL + endpoint).then((res)=>res.json()).then((data)=> data).catch((error)=>console.log(error));
 }
 
-const postData = (endpoint, data)=>{
+export const postData = (endpoint, data, action)=>{
     const returnData = {};
 
     const options = {
-        method: 'POST',
+        method: action,
         headers: {
             'content-type': 'application/json',
         },
         body: JSON.stringify(data)
     }
 
-    fetch(process.env.REACT_APP_BASE_URL + endpoint, options).then((response)=>response.json()).then((data)=>returnData = data).catch((error)=>console.log(error));
+    return fetch(process.env.REACT_APP_BASE_URL + endpoint, options).then((res)=>res.json()).then((data)=>data).catch((error)=>{console.log(error); return error;});
 
-    return returnData;
 }

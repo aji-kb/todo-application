@@ -20,6 +20,24 @@ namespace todoserver.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetAllTasks()
+        {
+            return Ok(_taskService.GetAllTasks());
+        }
+
+        [HttpPost]
+        public IActionResult AddTask([FromBody] TaskViewModel taskViewModel)
+        {
+            return Ok(SaveTask(taskViewModel));
+        }
+
+        [HttpPut]
+        public IActionResult UpdateTask([FromBody] TaskViewModel taskViewModel)
+        {
+            return Ok(SaveTask(taskViewModel));
+        }
+
+        [HttpGet]
         [Route("categories")]
         public IActionResult GetAllCategories()
         {
@@ -45,17 +63,74 @@ namespace todoserver.Controllers
             return SaveCategory(categoryViewModel);
         }
 
-        public IActionResult SaveCategory(CategoryViewModel categoryViewModel)
+        [HttpDelete]
+        [Route("category/{id}")]
+        public IActionResult DeleteCategory(int id)
+        {
+            try
+            {
+                var result = _taskService.DeleteCategory(id);
+                if(result > 0)
+                    return Ok(result);
+                else
+                    return StatusCode(500, "Error in Deleting Category");
+            }
+            catch(KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.AddCategory");
+                return BadRequest("Category Not Found");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.SaveCategory");
+                return StatusCode(500, "Error in TaskController.SaveCategory");
+            }
+        }
+
+        private IActionResult SaveTask(TaskViewModel taskViewModel)
+        {
+            try
+            {
+                var result = _taskService.SaveTask(taskViewModel);
+                return Ok(result);
+            }
+            catch(ArgumentException ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.SaveTask");
+                return BadRequest(new {message =  ex.Message});
+            }
+            catch(KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.SaveTask");
+                return BadRequest("Task Not Found");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.SaveTask");
+                return StatusCode(500, "Error in TaskController.SaveTask");
+            }
+        }
+        private IActionResult SaveCategory(CategoryViewModel categoryViewModel)
         {
             try
             {
                 var result = _taskService.SaveCategory(categoryViewModel);
                 return Ok(result);
             }
+            catch(ArgumentException ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.SaveCategory");
+                return BadRequest(new {message =  ex.Message});
+            }
             catch(KeyNotFoundException ex)
             {
-                _logger.LogError(ex, "Error in TaskController.AddCategory");
+                _logger.LogError(ex, "Error in TaskController.SaveCategory");
                 return BadRequest("Category Not Found");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.SaveCategory");
+                return StatusCode(500, "Error in TaskController.SaveCategory");
             }
         }
     }

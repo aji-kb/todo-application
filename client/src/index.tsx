@@ -2,8 +2,9 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+
 import './index.css';
-import 'bootstrap/dist/css/bootstrap.css';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -14,6 +15,8 @@ import Home from './app/component/home/Home';
 import Login from './app/component/auth/login';
 import Profile from './app/component/auth/profile';
 import Category from './app/component/category/category';
+
+
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
