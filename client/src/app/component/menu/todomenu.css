@@ -4,9 +4,10 @@
     padding-left: 10px;
 }
 
-.navbar > div li
+.nav-item, .dropdown
 {
     padding-left: 50px;
+    
 
 }
 

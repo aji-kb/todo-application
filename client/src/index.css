@@ -11,3 +11,39 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.form-input
+{
+  display: inline;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+.error-messages {
+  color: red;
+  font-size: 12px; 
+}
+
+.action-column
+{
+    max-width: 25px;
+}
+
+.action-link:hover
+{
+    cursor:pointer;
+}
+
+.grid-image
+{
+    width: 15px;
+    height: 15px;
+}
