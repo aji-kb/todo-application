@@ -10,4 +10,5 @@ public interface ITaskService
     List<CategoryViewModel> GetAllCategories();
     CategoryViewModel SaveCategory(CategoryViewModel categoryViewModel);
     int DeleteCategory(int id);
+    int DeleteTask(int id);
 }
