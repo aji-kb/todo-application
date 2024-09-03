@@ -49,6 +49,30 @@ namespace todoserver.Controllers
                 return StatusCode(500, "Error in loading categories");
         }
 
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult DeleteTask(int id)
+        {
+            try
+            {
+                var result = _taskService.DeleteTask(id);
+                if(result > 0)
+                    return Ok(result);
+                else
+                    return StatusCode(500, "Error in Deleting Category");
+            }
+            catch(KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.AddCategory");
+                return BadRequest("Category Not Found");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in TaskController.SaveCategory");
+                return StatusCode(500, "Error in TaskController.SaveCategory");
+            }
+        }
+
         [HttpPost]
         [Route("category")]
         public IActionResult AddCategory([FromBody] CategoryViewModel categoryViewModel)

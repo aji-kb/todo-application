@@ -9,6 +9,7 @@ const ToDo = ()=>{
     const [todoList, setTodoList] = useState([]);
     const [completedTodoList, setCompletedTodoList] = useState([]);
     const [confirmDialog, setConfirmDialog] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     // const handleAddClick = (data)=>{
 
@@ -77,6 +78,7 @@ const ToDo = ()=>{
 
     const saveClick = async (e)=>{
 
+        setErrorMessage('');
         //call API to save the task and reload the grid
         let action = 'POST';
         if(e.id > 0)
@@ -85,22 +87,32 @@ const ToDo = ()=>{
         }
        
         const response = await postData("task", e, action);
-       if(response != null && response.message == undefined)
+       if(response != null && response.statusCode == 200)
        {
            //save successful. now reload the list
+           setErrorMessage('');
            await loadTasks();
        }
        else
        {
-            console.log(response.message);
-           //setErrorMessage(response.message);
+            console.log(response.value.message);
+           setErrorMessage(response.value.message);
            //setSelectedCategory(e);
 
        }
    }
 
-   const onDeleteClick = (e)=>{
+   const onDeleteClick = async (e)=>{
+        const response = await postData("task/" + e, {}, "DELETE");
 
+        if(response != null && response.message == undefined)
+        {
+            await loadTasks();
+        }
+        else
+        {
+            console.log(response.message);
+        }
    }
 
    const onEditClick = (e)=>{
@@ -114,7 +126,7 @@ const ToDo = ()=>{
                     <div className="col"><h3>Task Assistant</h3></div>
                 </div>
                 <div className="row mt-5">
-                    <div className="col"><AddTask onAdd={(data)=>{saveClick(data)}}></AddTask></div>
+                    <div className="col"><AddTask onAdd={(data)=>{saveClick(data)}} errorMessage={errorMessage}></AddTask></div>
                 </div>
                 <div className="row mt-5">
                     <div className="col">

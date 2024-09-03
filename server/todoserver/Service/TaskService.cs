@@ -150,9 +150,41 @@ public class TaskService : ITaskService
     private string ValidateTask(TaskViewModel task)
     {
         StringBuilder errorMessage = new StringBuilder();
+
+        var existingTasks = _taskDbContext.Tasks.Where(x=>x.Id != task.Id && x.TaskName == task.TaskName);
+        if(existingTasks.Count() > 0)
+            errorMessage.Append("Task name already exists");
+
         if(string.IsNullOrEmpty(task.TaskName))
-            errorMessage.Append("TaskName is required");
+            errorMessage.Append("Task name is required");
 
         return errorMessage.ToString();
+    }
+
+    public int DeleteTask(int id)
+    {
+        _logger.LogInformation($"Deleting Task for id: {id}");
+
+        if(id > 0)
+        {
+            var task = _taskDbContext.Tasks.FirstOrDefault(x=>x.Id == id);
+            if(task != null)
+            {
+                //Remove Task Category mapping if present
+                var taskCategories = _taskDbContext.TaskCategories.Where(x=>x.TaskId == id);
+                if(taskCategories.ToList().Count() > 0)
+                {
+                    _taskDbContext.RemoveRange(taskCategories.ToArray());
+                }
+                _taskDbContext.Remove(task);
+                var result = _taskDbContext.SaveChanges();
+                _logger.LogInformation($"Task deletion successful. result : {result}");
+                return result;
+            }
+            else
+                throw new KeyNotFoundException("Task not found");    
+        }
+        else
+            throw new KeyNotFoundException("Task not found");
     }
 }

@@ -43,6 +43,11 @@ const AddTask = (props) => {
         <>
             <div className="container text-start">
                 <div className="row mb-3">
+                    <div className="col-sm-6">
+                    <span className='error-messages mx-3'>{props.errorMessage}</span>
+                    </div>
+                </div>
+                <div className="row mb-3">
                         <label htmlFor='inputDescription' className='col-sm-2 col-form-label'>Task</label>
                         <div className='col-sm-6'>
                             <input id='inputDescription' className='form-control' type='text' value={task.taskName} onChange={(e)=>{todoTextChange(e)}} placeholder="Task Description"></input>
