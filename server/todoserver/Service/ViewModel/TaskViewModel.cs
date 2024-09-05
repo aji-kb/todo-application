@@ -8,5 +8,5 @@ public class TaskViewModel
     public string? TaskName {get;set;}
     public bool IsCompleted {get;set;}
     public DateTime? DueDate {get;set;}
-    public int CategoryId {get;set;}
+    public int? CategoryId {get;set;}
 }

@@ -1,7 +1,8 @@
-import {  GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
+import {  GoogleLogin, GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google"
 import {useState, useEffect, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import AuthContext from '../../AuthContext';
+import LoginGoogle from "./googlelogin";
 
 const Login = ()=>{
 
@@ -12,7 +13,9 @@ const Login = ()=>{
     const {isAuthenticated, setIsAuthenticated} = useContext(AuthContext);
 
     const HandleSuccess = function(e){
+      console.log(e);
         localStorage.setItem("id_token", e.credential);
+
         fetch(baseUrl + "auth/google?idToken=" + e.credential).then((res)=>res.json()).then((data)=>{
           localStorage.setItem("userName", data.name);
           localStorage.setItem("userEmail", data.email);      
@@ -27,12 +30,15 @@ const Login = ()=>{
         console.log(e);
       }
 
+
+    
+
     return (
         <AuthContext.Consumer>
           {()=>(
             <div className="container mt-5">
                 <GoogleOAuthProvider clientId = {clientId}>
-                  <GoogleLogin onSuccess={HandleSuccess} onError={HandleError}></GoogleLogin>
+                    <GoogleLogin onSuccess={HandleSuccess} onError={HandleError}></GoogleLogin>
                 </GoogleOAuthProvider>
             </div>
         )}

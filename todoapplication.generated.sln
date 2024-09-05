@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{D434F678-4EA0-41BC-ABFD-205DEA3A2A7B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{337E1988-AF35-4014-B7D2-F6FD8A9AACC9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todoserver", "server\todoserver\todoserver.csproj", "{37D3FF26-B9B5-4C80-A97D-5E93CCF961E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todoserver", "server\todoserver\todoserver.csproj", "{AAED50F3-B363-4243-8D2C-1F9C6397FEEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,16 +13,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{37D3FF26-B9B5-4C80-A97D-5E93CCF961E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37D3FF26-B9B5-4C80-A97D-5E93CCF961E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37D3FF26-B9B5-4C80-A97D-5E93CCF961E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37D3FF26-B9B5-4C80-A97D-5E93CCF961E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAED50F3-B363-4243-8D2C-1F9C6397FEEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAED50F3-B363-4243-8D2C-1F9C6397FEEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAED50F3-B363-4243-8D2C-1F9C6397FEEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAED50F3-B363-4243-8D2C-1F9C6397FEEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{37D3FF26-B9B5-4C80-A97D-5E93CCF961E3} = {D434F678-4EA0-41BC-ABFD-205DEA3A2A7B}
+		{AAED50F3-B363-4243-8D2C-1F9C6397FEEA} = {337E1988-AF35-4014-B7D2-F6FD8A9AACC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8B313E55-4395-4166-B92C-A736CC21306F}

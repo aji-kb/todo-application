@@ -27,6 +27,25 @@ public class TaskService : ITaskService
         return categories.ToList();
     }
 
+    public TaskViewModel GetTaskById(int id)
+    {
+        var task = _taskDbContext.Tasks.Include(x=>x.TaskCategory).FirstOrDefault(x=>x.Id == id);
+
+        if(task == null)
+            throw new ArgumentNullException("Task Not Found");
+        else
+        {
+            return new TaskViewModel
+            {
+                Id = task.Id,
+                CategoryId = task.TaskCategory?.CategoryId,
+                TaskName = task.TaskName,
+                DueDate = task.DueDate,
+                IsCompleted = task.IsCompleted
+            };
+        }
+    }
+
     public CategoryViewModel SaveCategory(CategoryViewModel categoryViewModel)
     {
         var result = _taskDbContext.Categories.Where(x=>x.Id != categoryViewModel.Id && x.CategoryName == categoryViewModel.CategoryName);
@@ -94,6 +113,8 @@ public class TaskService : ITaskService
         Data.Model.Task? task;
         if(taskViewModel.Id > 0)
         {
+            //TODO: initiate save only if there are changes
+            
             //existing task. update it
             task = _taskDbContext.Tasks.Include(x=>x.TaskCategory).FirstOrDefault(x=>x.Id == taskViewModel.Id);
             if(task == null)
@@ -106,11 +127,21 @@ public class TaskService : ITaskService
             }
             if(task.TaskCategory != null)
             {
-                if(task.TaskCategory.CategoryId != taskViewModel.CategoryId)
+                if(taskViewModel.CategoryId.HasValue && task.TaskCategory.CategoryId != taskViewModel.CategoryId)
                 {
                     task.TaskCategory = new TaskCategory
                     {
-                        CategoryId = taskViewModel.CategoryId
+                        CategoryId = taskViewModel.CategoryId.Value
+                    };
+                }
+            }
+            else
+            {
+                if(taskViewModel.CategoryId.HasValue)
+                {
+                    task.TaskCategory = new TaskCategory
+                    {
+                        CategoryId = taskViewModel.CategoryId.Value
                     };
                 }
             }
@@ -124,10 +155,13 @@ public class TaskService : ITaskService
                 IsCompleted=taskViewModel.IsCompleted
             };
 
-            task.TaskCategory = new TaskCategory
+            if(taskViewModel.CategoryId.HasValue)
             {
-                CategoryId = taskViewModel.CategoryId
-            };
+                task.TaskCategory = new TaskCategory
+                {
+                    CategoryId = taskViewModel.CategoryId.Value
+                };
+            }
             
             _taskDbContext.Add(task);
         }

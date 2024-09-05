@@ -3,6 +3,7 @@ import { Modal } from "@material-ui/core";
 import {useState, useEffect} from 'react';
 import { fetchData, postData } from '../../../service/service';
 import { Tooltip } from 'react-tooltip'
+import { Task } from "../../../common/Task";
 
 const ToDo = ()=>{
 
@@ -10,26 +11,8 @@ const ToDo = ()=>{
     const [completedTodoList, setCompletedTodoList] = useState([]);
     const [confirmDialog, setConfirmDialog] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-
-    // const handleAddClick = (data)=>{
-
-    //     const existingItem= todoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
-    //     if(existingItem < 0)
-    //     {
-    //         const existingTodo = todoList.slice(); //creates a shallow copy of an array into a new object
-    //         existingTodo.push(data);
-    //         setTodoList(existingTodo);
-    //     }
-
-    //     const completedItem = completedTodoList.findIndex((item)=>data.taskName.toLowerCase() === item.taskName.toLowerCase());
-    //     if(completedItem >= 0)
-    //     {
-    //         const existingCompletedToDo = completedTodoList.slice();
-    //         existingCompletedToDo.splice(completedItem, 1);
-    //         setCompletedTodoList(existingCompletedToDo);
-    //     }
-
-    // }
+    const [infoMessage, setInfoMessage] = useState('');
+    const [selectedTask, setSelectedTask] = useState(Task);
 
     const completeTask = (data)=>{
         const existingTodo = todoList.slice();
@@ -66,9 +49,17 @@ const ToDo = ()=>{
 
     const loadTasks = async ()=>{
         const response = await fetchData("task");
+
         if(response != null && response.message == undefined)
         {
             setTodoList(response);
+        }
+        else
+        {
+            if(response.message)
+            {
+                setErrorMessage(response.message);
+            }
         }
     }
 
@@ -90,15 +81,15 @@ const ToDo = ()=>{
        if(response != null && response.statusCode == 200)
        {
            //save successful. now reload the list
-           setErrorMessage('');
+           setInfoMessage('Saved Successfully!')
            await loadTasks();
        }
        else
        {
-            console.log(response.value.message);
-           setErrorMessage(response.value.message);
-           //setSelectedCategory(e);
-
+            if(response.value)
+            {
+                setErrorMessage(response.value);
+            }
        }
    }
 
@@ -115,8 +106,13 @@ const ToDo = ()=>{
         }
    }
 
-   const onEditClick = (e)=>{
+   const onEditClick = async (e)=>{
+        const response = await fetchData("task/" + e, {});
 
+        if(response != null)
+        {
+            setSelectedTask(response);
+        }
    }
 
     return (
@@ -126,7 +122,7 @@ const ToDo = ()=>{
                     <div className="col"><h3>Task Assistant</h3></div>
                 </div>
                 <div className="row mt-5">
-                    <div className="col"><AddTask onAdd={(data)=>{saveClick(data)}} errorMessage={errorMessage}></AddTask></div>
+                    <div className="col"><AddTask onAdd={(data)=>{saveClick(data)}} errorMessage={errorMessage} selectedTask={selectedTask} infoMessage={infoMessage}></AddTask></div>
                 </div>
                 <div className="row mt-5">
                     <div className="col">
