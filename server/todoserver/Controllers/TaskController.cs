@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using todoserver.Service;
@@ -6,6 +7,7 @@ using todoserver.Service.ViewModel;
 namespace todoserver.Controllers
 {
     [Route("api/[controller]")]
+    //[Authorize]
     [ApiController]
     public class TaskController : ControllerBase
     {
@@ -17,6 +19,22 @@ namespace todoserver.Controllers
         {
             _taskService = taskService;
             _logger = logger;
+        }
+
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetTask(int id)
+        {
+            try
+            {
+                return Ok(_taskService.GetTaskById(id));
+            }
+            catch(ArgumentNullException aex)
+            {
+                _logger.LogError(aex, "Task Not Found Error in TaskController.GetTask");
+                return BadRequest(aex.Message);
+            }
         }
 
         [HttpGet]
@@ -121,7 +139,7 @@ namespace todoserver.Controllers
             catch(ArgumentException ex)
             {
                 _logger.LogError(ex, "Error in TaskController.SaveTask");
-                return BadRequest(new {message =  ex.Message});
+                return BadRequest(ex.Message);
             }
             catch(KeyNotFoundException ex)
             {
@@ -144,7 +162,7 @@ namespace todoserver.Controllers
             catch(ArgumentException ex)
             {
                 _logger.LogError(ex, "Error in TaskController.SaveCategory");
-                return BadRequest(new {message =  ex.Message});
+                return BadRequest(ex.Message);
             }
             catch(KeyNotFoundException ex)
             {

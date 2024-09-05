@@ -13,6 +13,7 @@ namespace TodoServer
 
         }
 
+
         [HttpGet]
         [Route("google")]
         public async Task<IActionResult> GoogleAuthentication(string idToken)

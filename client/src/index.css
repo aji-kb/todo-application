@@ -32,6 +32,11 @@ code {
   font-size: 12px; 
 }
 
+.info-messages {
+  color: darkblue;
+  font-size: 12px; 
+}
+
 .action-column
 {
     max-width: 25px;

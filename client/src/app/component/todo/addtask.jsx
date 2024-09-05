@@ -5,16 +5,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import './addtask.css';
 import Select from "react-select";
 import { fetchData, postData } from '../../../service/service';
+import { Task } from "../../../common/Task";
 
 const AddTask = (props) => {
 
 
-    const [task, setTask] = useState({taskName: '', dueDate: new Date(), categoryId: 0, isCompleted: false});
+    const [task, setTask] = useState(Task);
     const [options, setOptions] = useState([])
+    const [btnText, setBtnText] = useState('Add');
+    const [selectedOption, setSelectedOption] = useState({label: '', value:0});
+    const [errorMessage, setErrorMessage] = useState('');
+    const [infoMessage, setInfoMessage] = useState('');
 
-    const btnAddClick= ()=>{
-        console.log(task);
-        props.onAdd(task);
+    const btnAddClick= async ()=>{
+
+        await props.onAdd(task);
     }
 
     const todoTextChange = (e)=>{
@@ -23,28 +28,66 @@ const AddTask = (props) => {
 
     const categoryChangeHandler = (e)=>{
         setTask( prevTask => ({...prevTask, categoryId: e.value}));
+        setSelectedOption(e);
     }
 
     const loadCategories = async ()=>{
-        const savedCategoriesList = await fetchData("task/categories");
-        if(savedCategoriesList != null)
+        const response = await fetchData("task/categories");
+        if(response != null && response.message == undefined)
         {
-            const catOptions = savedCategoriesList.map((item)=>({label: item.categoryName, value: item.id}));
+            const catOptions = response.map((item)=>({label: item.categoryName, value: item.id}));
             setOptions(catOptions);
             return catOptions;
+        }
+        else
+        {
+            if(response.message)
+            {
+                setErrorMessage(response.message);
+            }
         }
     }
 
     useEffect(()=>{
         loadCategories();
+        setBtnText('Add');
+        setErrorMessage('');
+        setInfoMessage('');
     }, []);
+
+    useEffect(()=>{
+        setErrorMessage(props.errorMessage);
+    }, [props.errorMessage]);
+
+    useEffect(()=>{
+        setInfoMessage(props.infoMessage);
+    }, [props.infoMessage]);
+
+    useEffect(()=>{
+        const selectedOption = options.find(x=>x.value == props.selectedTask.categoryId);
+        if(selectedOption)
+            setSelectedOption(selectedOption);
+        else
+            setSelectedOption({label: '', value: 0})
+        setTask(props.selectedTask);
+        setBtnText('Save');
+    }, [props.selectedTask])
+
+    const btnResetClick = ()=>{
+        setTask(Task);
+        setBtnText('Add');
+        setSelectedOption({label: '', value:0});
+        setErrorMessage('');
+        setInfoMessage('');
+    }
 
     return (
         <>
             <div className="container text-start">
                 <div className="row mb-3">
                     <div className="col-sm-6">
-                    <span className='error-messages mx-3'>{props.errorMessage}</span>
+                    <span className='error-messages mx-3'>{errorMessage}</span>
+                    <span className='info-messages mx-3'>{infoMessage}</span>
                     </div>
                 </div>
                 <div className="row mb-3">
@@ -63,11 +106,17 @@ const AddTask = (props) => {
                 <div className="row mb-5">
                     <label htmlFor='category' className='col-sm-2 col-form-label'>Category</label>
                     <div className="col-sm-6">
-                        <Select id='category' defaultValue={task.categoryId} onChange={(e)=>categoryChangeHandler(e)} options={options}/>
+                        <Select id='category' defaultValue={selectedOption} value={selectedOption}
+                        getOptionLabel={x=>x.label}
+                        getOptionValue={x=>x.value}
+                        onChange={(e)=>categoryChangeHandler(e)} name='categoryOptions' options={options}/>
                     </div>                                            
                 </div>
                 <div className="row">
-                    <div><input id='btnAdd' type='button' onClick={btnAddClick} className='px-3 btn btn-secondary' value='Add'></input></div>
+                    <div>
+                        <input id='btnAdd' type='button' onClick={btnAddClick} className='px-3 btn btn-secondary' value={btnText}></input>
+                        <input id='btnReset' type='button' onClick={btnResetClick} className='mx-3 px-3 btn btn-secondary' value='Reset'></input>
+                    </div>
                 </div>
             </div>
         </>
