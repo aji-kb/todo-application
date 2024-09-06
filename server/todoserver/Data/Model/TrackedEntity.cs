@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using todoserver.Data.Contract;
 
 namespace todoserver.Data.Model;

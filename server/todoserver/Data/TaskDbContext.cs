@@ -9,18 +9,23 @@ namespace todoserver.Data;
 
 public class TaskDbContext: DbContext
 {
-    public TaskDbContext()
+
+    private readonly IConfiguration _configuration;
+
+    public TaskDbContext(IConfiguration configuration)
     {
+        _configuration = configuration;
     }
 
-    public TaskDbContext(DbContextOptions<TaskDbContext> options): base(options)
+    public TaskDbContext(DbContextOptions<TaskDbContext> options, IConfiguration configuration): base(options)
     {
-
+        _configuration = configuration;
     }
 
     public DbSet<Category> Categories {get;set;}
     public DbSet<Model.Task> Tasks {get;set;}
     public DbSet<TaskCategory> TaskCategories {get;set;}
+    public DbSet<User> Users {get;set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,13 +33,16 @@ public class TaskDbContext: DbContext
         modelBuilder.Entity<Category>().ToTable("Category");
         modelBuilder.Entity<Model.Task>().ToTable("Task");
         modelBuilder.Entity<TaskCategory>().ToTable("TaskCategory");
-        
+
+        modelBuilder.Entity<Model.Task>().HasQueryFilter(x=>x.CreatedBy == _configuration["useremail"]);
+        modelBuilder.Entity<Model.TaskCategory>().HasQueryFilter(x=>x.CreatedBy == _configuration["useremail"]);
+        modelBuilder.Entity<Model.Category>().HasQueryFilter(x=>x.CreatedBy == _configuration["useremail"]);
         base.OnModelCreating(modelBuilder);
     }
 
     public override int SaveChanges()
     {
-                var trackedEntites = this.ChangeTracker.Entries();
+        var trackedEntites = this.ChangeTracker.Entries();
 
         foreach(var trackedEntity in trackedEntites)
         {
@@ -46,12 +54,12 @@ public class TaskDbContext: DbContext
                     if(trackedEntity.State == EntityState.Added)
                     {
                         entity.CreatedDate = DateTime.UtcNow;
-                        entity.CreatedBy = "_akb";
+                        entity.CreatedBy = _configuration["useremail"];
                     }
                     else if(trackedEntity.State == EntityState.Modified)
                     {
                         entity.ModifiedDate = DateTime.UtcNow;
-                        entity.ModifiedBy = "_akb";
+                        entity.ModifiedBy = _configuration["useremail"];
                     }
                 }
 
