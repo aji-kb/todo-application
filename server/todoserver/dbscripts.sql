@@ -46,3 +46,13 @@ CREATE TABLE TaskManager.TaskCategory
 GO
 
 --CREATE TABLE TASKMANAGER.USER
+CREATE TABLE [TaskManager].[User](
+	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[UserEmail] [nvarchar](255) NOT NULL,
+    [Name] [nvarchar](255) NOT NULL,
+    [CreatedBy] NVARCHAR(25) NOT NULL, 
+    [CreatedDate] DATETIME  NOT NULL,
+    [ModifiedBy] NVARCHAR(25),
+    [ModifiedDate] DATETIME
+) ON [PRIMARY]
+GO

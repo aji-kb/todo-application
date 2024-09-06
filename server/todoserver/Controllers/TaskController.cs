@@ -7,7 +7,7 @@ using todoserver.Service.ViewModel;
 namespace todoserver.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class TaskController : ControllerBase
     {

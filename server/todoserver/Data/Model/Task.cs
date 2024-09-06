@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using todoserver.Data.Contract;
+
 namespace todoserver.Data.Model;
 
 public class Task : TrackedEntity
